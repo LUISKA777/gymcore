@@ -256,3 +256,50 @@ body {
   background: rgba(var(--gym-primary-rgb), 0.1) !important;
   color: var(--gym-primary) !important;
 }
+
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 16px 12px 80px; }
+  .cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .page-title { font-size: 18px; }
+
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    z-index: 200;
+    padding: 8px 0 12px;
+  }
+
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    color: #475569;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    padding: 4px 0;
+    text-decoration: none;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--gym-primary);
+  }
+
+  .table { font-size: 11px; }
+  .table th, .table td { padding: 8px 6px; }
+  .section { padding: 14px; }
+}
