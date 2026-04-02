@@ -4,7 +4,6 @@ import API from '../api'
 
 const SUPABASE_URL = 'https://czdlykdzkneneckfzosw.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6ZGx5a2R6a25lbmVja2Z6b3N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzkwNjQsImV4cCI6MjA5MDY1NTA2NH0.-ZBe1hXFz5dTI0pOg4NSjQqEVBxN7-yrueSXIcpb2kc'
-
 const PRESET_COLORS = [
   { name: 'Morado', value: '#8b5cf6' },
   { name: 'Azul', value: '#3b82f6' },
@@ -162,7 +161,55 @@ export default function GymProfile() {
             {saved && <span style={{ color:'#34d399', fontSize:12 }}>{saved}</span>}
           </div>
         </div>
+
+        <div className="section" style={{ maxWidth: 600 }}>
+          <div className="section-title">Cambiar contrasena</div>
+          <ChangePassword />
+        </div>
       </div>
+    </div>
+  )
+}
+
+function ChangePassword() {
+  const [form, setForm] = useState({ current: '', newPass: '', confirm: '' })
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState('')
+
+  const save = async () => {
+    if (!form.current || !form.newPass) return setError('Completa todos los campos')
+    if (form.newPass !== form.confirm) return setError('Las contrasenas no coinciden')
+    if (form.newPass.length < 6) return setError('Minimo 6 caracteres')
+    setError(''); setSaving(true)
+    try {
+      await API.post('/auth/change-password', { current_password: form.current, new_password: form.newPass })
+      setMsg('Contrasena actualizada')
+      setForm({ current: '', newPass: '', confirm: '' })
+      setTimeout(() => setMsg(''), 3000)
+    } catch (e) { setError(e.response?.data?.detail || 'Contrasena actual incorrecta') }
+    setSaving(false)
+  }
+
+  return (
+    <div style={{ display:'grid', gap:14 }}>
+      {error && <div style={{ background:'rgba(248,113,113,0.1)', color:'#f87171', border:'1px solid rgba(248,113,113,0.2)', borderRadius:8, padding:'10px 14px', fontSize:13 }}>{error}</div>}
+      {msg && <div style={{ background:'rgba(52,211,153,0.1)', color:'#34d399', border:'1px solid rgba(52,211,153,0.2)', borderRadius:8, padding:'10px 14px', fontSize:13 }}>{msg}</div>}
+      <div>
+        <label className="label">Contrasena actual</label>
+        <input className="input" type="password" placeholder="••••••••" value={form.current} onChange={e => setForm({...form, current: e.target.value})} />
+      </div>
+      <div>
+        <label className="label">Nueva contrasena</label>
+        <input className="input" type="password" placeholder="Minimo 6 caracteres" value={form.newPass} onChange={e => setForm({...form, newPass: e.target.value})} />
+      </div>
+      <div>
+        <label className="label">Confirmar nueva contrasena</label>
+        <input className="input" type="password" placeholder="Repetir contrasena" value={form.confirm} onChange={e => setForm({...form, confirm: e.target.value})} />
+      </div>
+      <button onClick={save} disabled={saving} className="btn btn-purple" style={{ width:'fit-content' }}>
+        {saving ? 'Guardando...' : 'Cambiar contrasena'}
+      </button>
     </div>
   )
 }
