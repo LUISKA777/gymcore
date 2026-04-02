@@ -7,6 +7,7 @@ import ClientDetail from './pages/ClientDetail'
 import Finances from './pages/Finances'
 import Expenses from './pages/Expenses'
 import Diagnosis from './pages/Diagnosis'
+import GymProfile from './pages/GymProfile'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/finanzas" element={<PrivateRoute><Finances /></PrivateRoute>} />
           <Route path="/gastos" element={<PrivateRoute><Expenses /></PrivateRoute>} />
           <Route path="/diagnostico" element={<PrivateRoute><Diagnosis /></PrivateRoute>} />
+          <Route path="/perfil-gym" element={<PrivateRoute><GymProfile /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

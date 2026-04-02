@@ -63,6 +63,14 @@ export default function ClientDetail() {
     setSaving(false)
   }
 
+  const deleteClient = async () => {
+    if (!confirm(`¿Eliminar a ${client.name}? Esta acción no se puede deshacer.`)) return
+    try {
+      await API.delete(`/clients/${id}/`)
+      navigate('/clientes')
+    } catch {}
+  }
+
   if (loading) return <div className="layout"><Sidebar /><div className="main-content"><div className="loading">Cargando...</div></div></div>
   if (!client) return <div className="layout"><Sidebar /><div className="main-content"><div className="loading">Cliente no encontrado</div></div></div>
 
@@ -86,6 +94,7 @@ export default function ClientDetail() {
           <div style={{ marginLeft:'auto', display:'flex', gap:8 }}>
             <button className="btn btn-green" onClick={() => setShowPayForm(true)}>+ Pago membresía</button>
             <button className="btn btn-purple" onClick={() => setShowMeasForm(true)}>+ Avance</button>
+            <button className="btn btn-red" onClick={deleteClient}>🗑️ Eliminar</button>
           </div>
         </div>
 
