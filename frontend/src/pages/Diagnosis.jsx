@@ -3,11 +3,11 @@ import Sidebar from './Sidebar'
 import API from '../api'
 
 const FRASES = [
-  "Tu esfuerzo vale la pena!💪🏻",
-  "Cada dia es una nueva oportunidad!💪🏻",
-  "Los campeones nunca se rinden!💪🏻",
-  "Tu cuerpo puede, tu mente decide!💪🏻",
-  "Segui adelante, lo estas logrando!💪🏻",
+  "Tu esfuerzo vale la pena!",
+  "Cada dia es una nueva oportunidad!",
+  "Los campeones nunca se rinden!",
+  "Tu cuerpo puede, tu mente decide!",
+  "Segui adelante, lo estas logrando!",
 ]
 
 export default function Diagnosis() {
@@ -41,13 +41,13 @@ Renovala hoy y volvé a entrenar con nosotros. Contactanos para coordinar tu pag
 } else {
   msg = `Hola ${client.name}!
 
-Te escribimos desde *${gymName}* para recordarte que tu membresia vence pronto.😕
+Te escribimos desde *${gymName}* para recordarte que tu membresia vence pronto.
 
 ${frase}
 
-Renovala ahora y segui alcanzando tus metas sin interrupciones!✨ Contactanos para coordinar tu pago.💪🏻
+Renovala ahora y segui alcanzando tus metas sin interrupciones! Contactanos para coordinar tu pago.
 
-${gymName} te apoya en cada paso de tu camino fitness!☺️`
+${gymName} te apoya en cada paso de tu camino fitness!`
 }
 
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank')
