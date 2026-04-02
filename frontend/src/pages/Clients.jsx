@@ -34,7 +34,7 @@ export default function Clients() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    Promise.all([API.get('/clients'), API.get('/dashboard/plans')])
+    Promise.all([API.get('/clients/'), API.get('/dashboard/plans')])
       .then(([c, p]) => { setClients(c.data); setPlans(p.data) })
       .finally(() => setLoading(false))
   }, [])
@@ -43,7 +43,7 @@ export default function Clients() {
     if (!form.name) return setError('El nombre es obligatorio')
     setSaving(true)
     try {
-      const res = await API.post('/clients', form)
+      const res = await API.post('/clients/', form)
       setClients(prev => [...prev, res.data])
       setModal(false); setForm({}); setError('')
     } catch (e) { setError(e.response?.data?.detail || 'Error al guardar') }
