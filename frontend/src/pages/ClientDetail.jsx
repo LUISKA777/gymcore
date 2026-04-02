@@ -30,7 +30,7 @@ export default function ClientDetail() {
   useEffect(() => {
     Promise.all([
       API.get(`/clients/${id}`),
-      API.get(`/measurements/progress/${id}`) ,
+      API.get(`/measurements/progress/${id}`),
       API.get('/dashboard/plans'),
     ]).then(([c, p, pl]) => {
       setClient(c.data)
@@ -42,7 +42,7 @@ export default function ClientDetail() {
   const saveMeasurement = async () => {
     setSaving(true)
     try {
-      await API.post('/measurements', { ...measForm, client_id: parseInt(id) })
+      await API.post('/measurements/', { ...measForm, client_id: parseInt(id) })
       const p = await API.get(`/measurements/progress/${id}`)
       setProgress(p.data)
       setShowMeasForm(false); setMeasForm({})
@@ -55,8 +55,8 @@ export default function ClientDetail() {
     setSaving(true)
     try {
       const plan = plans.find(p => p.id === parseInt(payForm.plan_id))
-      await API.post('/payments', { client_id: parseInt(id), plan_id: parseInt(payForm.plan_id), amount: plan?.price || 0 })
-      const c = await API.get(`/clients/${id}`)
+      await API.post('/payments/', { client_id: parseInt(id), plan_id: parseInt(payForm.plan_id), amount: plan?.price || 0 })
+      const c = await API.get(`/clients/${id}/`)
       setClient(c.data)
       setShowPayForm(false); setPayForm({})
     } catch {}
