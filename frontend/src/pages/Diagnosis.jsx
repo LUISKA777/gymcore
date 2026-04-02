@@ -3,11 +3,11 @@ import Sidebar from './Sidebar'
 import API from '../api'
 
 const FRASES = [
-  "¡Tu esfuerzo vale la pena! 💪",
-  "¡Cada día es una nueva oportunidad! 🌟",
-  "¡Los campeones nunca se rinden! 🏆",
-  "¡Tu cuerpo puede, tu mente decide! ⚡",
-  "¡Seguí adelante, lo estás logrando! 🔥",
+  "Tu esfuerzo vale la pena!",
+  "Cada dia es una nueva oportunidad!",
+  "Los campeones nunca se rinden!",
+  "Tu cuerpo puede, tu mente decide!",
+  "Segui adelante, lo estas logrando!",
 ]
 
 export default function Diagnosis() {
@@ -29,26 +29,26 @@ export default function Diagnosis() {
 
     let msg = ''
     if (type === 'overdue') {
-      msg = `¡Hola ${client.name}! 👋
+  msg = `Hola ${client.name}!
 
-Notamos que tu membresía en *${gymName}* venció. ¡Te extrañamos! 😢
-
-${frase}
-
-Renová hoy y volvé a entrenar con nosotros. 💪 Contáctanos para coordinar tu pago.
-
-— Equipo ${gymName} 🏋️`
-    } else {
-      msg = `¡Hola ${client.name}! 👋
-
-Te escribimos desde *${gymName}* para recordarte que tu membresía vence pronto. 📅
+Notamos que tu membresia en *${gymName}* vencio. Te extranamos!
 
 ${frase}
 
-¡Renovála ahora y seguí alcanzando tus metas sin interrupciones! 🔥
+Renovala hoy y volvé a entrenar con nosotros. Contactanos para coordinar tu pago.
 
-— Equipo ${gymName} 🏋️`
-    }
+- Equipo ${gymName}`
+} else {
+  msg = `Hola ${client.name}!
+
+Te escribimos desde *${gymName}* para recordarte que tu membresia vence pronto.
+
+${frase}
+
+Renovala ahora y segui alcanzando tus metas sin interrupciones!
+
+- Equipo ${gymName}`
+}
 
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank')
   }
