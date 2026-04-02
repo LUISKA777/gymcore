@@ -11,7 +11,7 @@ export default function Finances() {
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    Promise.all([API.get('/payments'), API.get('/dashboard/plans')])
+    Promise.all([API.get('/payments/'), API.get('/dashboard/plans')])
       .then(([p, pl]) => { setPayments(p.data); setPlans(pl.data) })
       .finally(() => setLoading(false))
   }, [])
