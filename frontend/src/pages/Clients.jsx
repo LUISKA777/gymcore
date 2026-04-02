@@ -60,12 +60,14 @@ export default function Clients() {
   })
 
   const statusOf = (c) => {
-    if (!c.membership_end) return { label:'Sin membresía', cls:'pill-blue' }
-    if (c.membership_end < today) return { label:'Vencida', cls:'pill-red' }
-    const diff = Math.ceil((new Date(c.membership_end) - new Date()) / 86400000)
-    if (diff <= 3) return { label:`Vence en ${diff}d`, cls:'pill-amber' }
-    return { label:'Activa', cls:'pill-green' }
-  }
+  if (!c.membership_end) return { label:'Sin membresía', cls:'pill-blue' }
+  if (c.membership_end < today) return { label:'Vencida', cls:'pill-red' }
+  const diff = Math.ceil((new Date(c.membership_end) - new Date()) / 86400000)
+  if (diff === 0) return { label:'Vence hoy', cls:'pill-red' }
+  if (diff === 1) return { label:'Vence mañana', cls:'pill-amber' }
+  if (diff <= 7) return { label:`Vence en ${diff}d`, cls:'pill-amber' }
+  return { label:'Activa', cls:'pill-green' }
+}
 
   return (
     <div className="layout">
