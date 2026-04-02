@@ -34,7 +34,7 @@ export default function Clients() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    Promise.all([API.get('/clients'), API.get('/dashboard/plans')])
+    Promise.all([API.get('/clients/'), API.get('/dashboard/plans/')])
       .then(([c, p]) => { setClients(c.data); setPlans(p.data) })
       .finally(() => setLoading(false))
   }, [])
