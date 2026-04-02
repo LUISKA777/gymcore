@@ -8,11 +8,13 @@ import Finances from './pages/Finances'
 import Expenses from './pages/Expenses'
 import Diagnosis from './pages/Diagnosis'
 import GymProfile from './pages/GymProfile'
+import SuperAdmin from './pages/SuperAdmin'
 
-function PrivateRoute({ children }) {
+function PrivateRoute({ children, adminOnly }) {
   const { user, loading } = useAuth()
   if (loading) return <div style={{ color:'#a78bfa', padding:40, fontFamily:'monospace' }}>Cargando...</div>
   if (!user) return <Navigate to="/login" />
+  if (adminOnly && user.role !== 'admin') return <Navigate to="/" />
   return children
 }
 
@@ -22,6 +24,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/super-admin" element={<PrivateRoute adminOnly><SuperAdmin /></PrivateRoute>} />
           <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/clientes" element={<PrivateRoute><Clients /></PrivateRoute>} />
           <Route path="/clientes/:id" element={<PrivateRoute><ClientDetail /></PrivateRoute>} />
