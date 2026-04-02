@@ -25,7 +25,15 @@ def create_payment(body: PaymentCreate, db: Client = Depends(get_db), user=Depen
 
     client = db.table("clients").select("*").eq("id", body.client_id).single().execute().data
     today = date.today()
-    new_end = today + timedelta(days=plan["duration_days"])
+    
+    # Si tiene membresía vigente, sumar desde la fecha de vencimiento actual
+    current_end = client.get("membership_end")
+    if current_end and current_end >= str(today):
+        base_date = date.fromisoformat(current_end)
+    else:
+        base_date = today
+    
+    new_end = base_date + timedelta(days=plan["duration_days"])
 
     db.table("clients").update({
         "membership_plan_id": body.plan_id,
@@ -35,10 +43,10 @@ def create_payment(body: PaymentCreate, db: Client = Depends(get_db), user=Depen
 
     res = db.table("payments").insert({
         "client_id":   body.client_id,
-        "gym_id":      user["gym_id"],
+        "gym_id":      int(user["gym_id"]),
         "plan_id":     body.plan_id,
         "amount":      body.amount,
-        "approved_by": user["gym_id"],
+        "approved_by": int(user["gym_id"]),
         "status":      "approved",
     }).execute()
     return res.data[0]
