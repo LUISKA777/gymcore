@@ -30,7 +30,7 @@ export default function ClientDetail() {
   useEffect(() => {
     Promise.all([
       API.get(`/clients/${id}`),
-      API.get(`/measurements/progress/${id}`),
+      API.get(`/measurements/progress/${id}`) ,
       API.get('/dashboard/plans'),
     ]).then(([c, p, pl]) => {
       setClient(c.data)
