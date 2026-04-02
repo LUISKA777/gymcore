@@ -5,6 +5,27 @@ import API from '../api'
 const SUPABASE_URL = 'https://czdlykdzkneneckfzosw.supabase.co'
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6ZGx5a2R6a25lbmVja2Z6b3N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNzkwNjQsImV4cCI6MjA5MDY1NTA2NH0.-ZBe1hXFz5dTI0pOg4NSjQqEVBxN7-yrueSXIcpb2kc'
 
+const PRESET_COLORS = [
+  { name: 'Morado', value: '#8b5cf6' },
+  { name: 'Azul', value: '#3b82f6' },
+  { name: 'Verde', value: '#10b981' },
+  { name: 'Rojo', value: '#ef4444' },
+  { name: 'Naranja', value: '#f97316' },
+  { name: 'Rosa', value: '#ec4899' },
+  { name: 'Cyan', value: '#06b6d4' },
+  { name: 'Amarillo', value: '#eab308' },
+]
+
+export function applyGymColor(color) {
+  if (!color) return
+  document.documentElement.style.setProperty('--gym-primary', color)
+  const hex = color.replace('#', '')
+  const r = parseInt(hex.slice(0,2), 16)
+  const g = parseInt(hex.slice(2,4), 16)
+  const b = parseInt(hex.slice(4,6), 16)
+  document.documentElement.style.setProperty('--gym-primary-rgb', `${r},${g},${b}`)
+}
+
 export default function GymProfile() {
   const [gym, setGym] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -16,7 +37,14 @@ export default function GymProfile() {
   useEffect(() => {
     API.get('/gyms/me').then(r => {
       setGym(r.data)
-      setForm({ name: r.data.name, phone: r.data.phone, whatsapp_number: r.data.whatsapp_number, address: r.data.address })
+      setForm({
+        name: r.data.name,
+        phone: r.data.phone,
+        whatsapp_number: r.data.whatsapp_number,
+        address: r.data.address,
+        primary_color: r.data.primary_color || '#8b5cf6',
+      })
+      applyGymColor(r.data.primary_color || '#8b5cf6')
     }).finally(() => setLoading(false))
   }, [])
 
@@ -38,7 +66,7 @@ export default function GymProfile() {
         const url = `${SUPABASE_URL}/storage/v1/object/public/gym-logos/${path}?t=${Date.now()}`
         await API.patch(`/gyms/${gym.id}`, { logo_url: url })
         setGym(prev => ({ ...prev, logo_url: url }))
-        setSaved('Logo guardado ✓')
+        setSaved('Logo guardado')
         setTimeout(() => setSaved(''), 3000)
       }
     } catch {}
@@ -50,13 +78,17 @@ export default function GymProfile() {
     try {
       await API.patch(`/gyms/${gym.id}`, form)
       setGym(prev => ({ ...prev, ...form }))
-      setSaved('Perfil guardado ✓')
+      applyGymColor(form.primary_color)
+      localStorage.setItem('gc_color', form.primary_color)
+      setSaved('Perfil guardado')
       setTimeout(() => setSaved(''), 3000)
     } catch {}
     setSaving(false)
   }
 
   if (loading) return <div className="layout"><Sidebar /><div className="main-content"><div className="loading">Cargando...</div></div></div>
+
+  const primary = form.primary_color || '#8b5cf6'
 
   return (
     <div className="layout">
@@ -68,7 +100,7 @@ export default function GymProfile() {
           <div className="section-title">Logo e identidad</div>
 
           <div style={{ display:'flex', alignItems:'center', gap:24, marginBottom:28 }}>
-            <div style={{ width:100, height:100, borderRadius:16, border:'2px dashed rgba(139,92,246,0.3)', overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', background:'#161616', flexShrink:0 }}>
+            <div style={{ width:100, height:100, borderRadius:16, border:`2px dashed ${primary}44`, overflow:'hidden', display:'flex', alignItems:'center', justifyContent:'center', background:'#161616', flexShrink:0 }}>
               {gym.logo_url
                 ? <img src={gym.logo_url} alt="logo" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                 : <span style={{ fontSize:36, opacity:0.3 }}>🏋️</span>
@@ -76,11 +108,11 @@ export default function GymProfile() {
             </div>
             <div>
               <div style={{ fontSize:13, color:'#64748b', marginBottom:10 }}>Logo del gym</div>
-              <label style={{ background:'#8b5cf6', color:'#fff', border:'none', borderRadius:8, padding:'8px 16px', fontSize:13, cursor:'pointer', fontWeight:500 }}>
-                {uploading ? 'Subiendo...' : '📁 Subir logo'}
+              <label style={{ background: primary, color:'#fff', border:'none', borderRadius:8, padding:'8px 16px', fontSize:13, cursor:'pointer', fontWeight:500 }}>
+                {uploading ? 'Subiendo...' : 'Subir logo'}
                 <input type="file" accept="image/*" style={{ display:'none' }} onChange={e => e.target.files[0] && uploadLogo(e.target.files[0])} />
               </label>
-              <div style={{ fontSize:11, color:'#475569', marginTop:6 }}>JPG, PNG — máx 2MB</div>
+              <div style={{ fontSize:11, color:'#475569', marginTop:6 }}>JPG, PNG — max 2MB</div>
             </div>
           </div>
 
@@ -90,21 +122,41 @@ export default function GymProfile() {
               <input className="input" value={form.name || ''} onChange={e => setForm({...form, name: e.target.value})} />
             </div>
             <div>
-              <label className="label">Teléfono</label>
+              <label className="label">Telefono</label>
               <input className="input" placeholder="8888-0000" value={form.phone || ''} onChange={e => setForm({...form, phone: e.target.value})} />
             </div>
             <div>
-              <label className="label">WhatsApp (con código país)</label>
+              <label className="label">WhatsApp (con codigo pais)</label>
               <input className="input" placeholder="50688880000" value={form.whatsapp_number || ''} onChange={e => setForm({...form, whatsapp_number: e.target.value})} />
             </div>
             <div>
-              <label className="label">Dirección</label>
+              <label className="label">Direccion</label>
               <input className="input" placeholder="Ej: 100m norte del parque central" value={form.address || ''} onChange={e => setForm({...form, address: e.target.value})} />
+            </div>
+
+            <div>
+              <label className="label">Color principal</label>
+              <div style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:12 }}>
+                {PRESET_COLORS.map(c => (
+                  <div key={c.value} onClick={() => setForm({...form, primary_color: c.value})}
+                    style={{ width:36, height:36, borderRadius:'50%', background:c.value, cursor:'pointer',
+                      border: form.primary_color === c.value ? `3px solid #fff` : '3px solid transparent',
+                      outline: form.primary_color === c.value ? `2px solid ${c.value}` : 'none',
+                      transition:'all 0.15s' }} title={c.name} />
+                ))}
+              </div>
+              <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                <input type="color" value={form.primary_color || '#8b5cf6'}
+                  onChange={e => setForm({...form, primary_color: e.target.value})}
+                  style={{ width:40, height:40, border:'none', borderRadius:8, cursor:'pointer', background:'none' }} />
+                <span style={{ fontSize:12, color:'#64748b' }}>O elegí un color personalizado</span>
+              </div>
             </div>
           </div>
 
           <div style={{ display:'flex', gap:12, alignItems:'center', marginTop:20 }}>
-            <button className="btn btn-purple" onClick={saveProfile} disabled={saving}>
+            <button onClick={saveProfile} disabled={saving}
+              style={{ background: primary, color:'#fff', border:'none', borderRadius:8, padding:'10px 20px', cursor:'pointer', fontSize:13, fontWeight:500 }}>
               {saving ? 'Guardando...' : 'Guardar cambios'}
             </button>
             {saved && <span style={{ color:'#34d399', fontSize:12 }}>{saved}</span>}

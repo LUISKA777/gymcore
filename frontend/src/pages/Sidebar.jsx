@@ -19,7 +19,26 @@ export default function Sidebar() {
   const [gym, setGym] = useState(null)
 
   useEffect(() => {
-    API.get('/gyms/me').then(r => setGym(r.data)).catch(() => {})
+    const saved = localStorage.getItem('gc_color')
+    if (saved) {
+      document.documentElement.style.setProperty('--gym-primary', saved)
+      const hex = saved.replace('#', '')
+      const r = parseInt(hex.slice(0,2), 16)
+      const g = parseInt(hex.slice(2,4), 16)
+      const b = parseInt(hex.slice(4,6), 16)
+      document.documentElement.style.setProperty('--gym-primary-rgb', `${r},${g},${b}`)
+    }
+    API.get('/gyms/me').then(r => {
+      setGym(r.data)
+      const color = r.data.primary_color || '#8b5cf6'
+      document.documentElement.style.setProperty('--gym-primary', color)
+      const hex = color.replace('#', '')
+      const rv = parseInt(hex.slice(0,2), 16)
+      const gv = parseInt(hex.slice(2,4), 16)
+      const bv = parseInt(hex.slice(4,6), 16)
+      document.documentElement.style.setProperty('--gym-primary-rgb', `${rv},${gv},${bv}`)
+      localStorage.setItem('gc_color', color)
+    }).catch(() => {})
   }, [])
 
   return (

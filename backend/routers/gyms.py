@@ -14,6 +14,7 @@ class GymUpdate(BaseModel):
     active: Optional[bool] = None
     logo_url: Optional[str] = None
     address: Optional[str] = None
+    primary_color: Optional[str] = None
 
 @router.get("/")
 def list_gyms(db: Client = Depends(get_db), user=Depends(require_admin)):

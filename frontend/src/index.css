@@ -228,3 +228,31 @@ body {
   .main-content { margin-left: 0; padding: 16px; }
   .cards-grid { grid-template-columns: 1fr 1fr; }
 }
+
+:root {
+  --gym-primary: #8b5cf6;
+  --gym-primary-rgb: 139,92,246;
+}
+
+.nav-item.active {
+  color: var(--gym-primary) !important;
+  background: rgba(var(--gym-primary-rgb), 0.08) !important;
+  border-left-color: var(--gym-primary) !important;
+}
+
+.btn-purple {
+  background: var(--gym-primary) !important;
+}
+
+.sidebar-logo {
+  color: var(--gym-primary) !important;
+}
+
+.section-title {
+  color: var(--gym-primary) !important;
+}
+
+.pill-purple {
+  background: rgba(var(--gym-primary-rgb), 0.1) !important;
+  color: var(--gym-primary) !important;
+}
