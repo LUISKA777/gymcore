@@ -12,6 +12,8 @@ class GymUpdate(BaseModel):
     phone: Optional[str] = None
     whatsapp_number: Optional[str] = None
     active: Optional[bool] = None
+    logo_url: Optional[str] = None
+    address: Optional[str] = None
 
 @router.get("/")
 def list_gyms(db: Client = Depends(get_db), user=Depends(require_admin)):
