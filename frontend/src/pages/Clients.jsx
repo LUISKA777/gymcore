@@ -44,8 +44,18 @@ export default function Clients() {
     setSaving(true)
     try {
       const { matricula_plan_id, ...clientData } = form
+      // Auto agregar 506 si no tiene codigo de pais
+      if (clientData.whatsapp_number && !clientData.whatsapp_number.startsWith('506')) {
+        clientData.whatsapp_number = '506' + clientData.whatsapp_number.replace(/\D/g, '')
+      }
       const res = await API.post('/clients', clientData)
       const newClient = res.data
+      // Registrar pago de membresía automáticamente
+      if (clientData.membership_plan_id) {
+        const plan = plans.find(p => p.id === clientData.membership_plan_id)
+        if (plan) await API.post('/payments/', { client_id: newClient.id, plan_id: clientData.membership_plan_id, amount: plan.price })
+      }
+      // Registrar matrícula si aplica
       if (matricula_plan_id) {
         const plan = plans.find(p => p.id === matricula_plan_id)
         if (plan) await API.post('/payments/', { client_id: newClient.id, plan_id: matricula_plan_id, amount: plan.price })
@@ -159,7 +169,7 @@ export default function Clients() {
             </div>
             <div>
               <label className="label">WhatsApp (con código país)</label>
-              <input className="input" placeholder="50688880000" value={form.whatsapp_number || ''} onChange={e => setForm({...form, whatsapp_number: e.target.value})} />
+              <input className="input" placeholder="88880000 (sin 506)" value={form.whatsapp_number || ''} onChange={e => setForm({...form, whatsapp_number: e.target.value})} />
             </div>
             <div>
               <label className="label">Edad</label>
