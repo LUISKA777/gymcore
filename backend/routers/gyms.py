@@ -15,6 +15,7 @@ class GymUpdate(BaseModel):
     logo_url: Optional[str] = None
     address: Optional[str] = None
     primary_color: Optional[str] = None
+    stock_alert_threshold: Optional[int] = None
 
 @router.get("/")
 def list_gyms(db: Client = Depends(get_db), user=Depends(require_admin)):

@@ -13,11 +13,12 @@ const FRASES = [
 export default function Diagnosis() {
   const [data, setData] = useState(null)
   const [gym, setGym] = useState(null)
+  const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([API.get('/dashboard/'), API.get('/gyms/me')])
-      .then(([d, g]) => { setData(d.data); setGym(g.data) })
+    Promise.all([API.get('/dashboard/'), API.get('/gyms/me'), API.get('/products/')])
+      .then(([d, g, p]) => { setData(d.data); setGym(g.data); setProducts(p.data) })
       .finally(() => setLoading(false))
   }, [])
 
@@ -173,11 +174,38 @@ ${frase}
             )}
             {!diag.high_overdue && !diag.low_retention && diag.income_growing && (
               <div style={{ background:'rgba(52,211,153,0.05)', border:'1px solid rgba(52,211,153,0.15)', borderRadius:8, padding:12 }}>
-                <div style={{ fontSize:13, fontWeight:500, color:'#34d399', marginBottom:4 }}>Todo en orden 🎉</div>
-                <div style={{ fontSize:12, color:'#64748b' }}>Tu gym está funcionando bien. Seguí así.</div>
+                <div style={{ fontSize:13, fontWeight:500, color:'#34d399', marginBottom:4 }}>Todo en orden</div>
+                <div style={{ fontSize:12, color:'#64748b' }}>Tu gym está funcionando bien. Segui así.</div>
               </div>
             )}
           </div>
+
+          {(() => {
+            const threshold = gym?.stock_alert_threshold || 5
+            const lowStock = products.filter(p => p.stock <= threshold)
+            if (!lowStock.length) return null
+            return (
+              <div className="section" style={{ gridColumn:'1/-1' }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
+                  <div className="section-title" style={{ marginBottom:0, color:'#fbbf24' }}>Alerta de stock bajo</div>
+                  <span style={{ fontSize:11, color:'#64748b', fontFamily:'DM Mono,monospace' }}>Umbral: {threshold} unidades</span>
+                </div>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))', gap:10 }}>
+                  {lowStock.map(p => (
+                    <div key={p.id} style={{ background:'rgba(251,191,36,0.05)', border:'1px solid rgba(251,191,36,0.2)', borderRadius:10, padding:12 }}>
+                      <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>{p.name}</div>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                        <span style={{ fontSize:11, color:'#64748b' }}>{p.category}</span>
+                        <span style={{ fontSize:14, fontWeight:700, color: p.stock === 0 ? '#f87171' : '#fbbf24' }}>
+                          {p.stock === 0 ? 'Agotado' : `${p.stock} unid.`}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
         </div>
       </div>
     </div>

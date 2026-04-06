@@ -42,6 +42,7 @@ export default function GymProfile() {
         whatsapp_number: r.data.whatsapp_number,
         address: r.data.address,
         primary_color: r.data.primary_color || '#8b5cf6',
+        stock_alert_threshold: r.data.stock_alert_threshold || 5,
       })
       applyGymColor(r.data.primary_color || '#8b5cf6')
     }).finally(() => setLoading(false))
@@ -131,6 +132,11 @@ export default function GymProfile() {
             <div>
               <label className="label">Direccion</label>
               <input className="input" placeholder="Ej: 100m norte del parque central" value={form.address || ''} onChange={e => setForm({...form, address: e.target.value})} />
+            </div>
+
+            <div>
+              <label className="label">Alerta stock bajo (unidades)</label>
+              <input className="input" type="number" min="1" placeholder="5" value={form.stock_alert_threshold || ''} onChange={e => setForm({...form, stock_alert_threshold: parseInt(e.target.value)})} />
             </div>
 
             <div>
