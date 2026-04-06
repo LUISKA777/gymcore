@@ -14,11 +14,11 @@ import GymProfile from './pages/GymProfile'
 import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
-import Landing from './pages/Landing'
+
 
 
 function PrivateRoute({ children, ownerOnly }) {
-  const { user, role, isOwner, loading } = useAuth()
+  const { user, role, isOwner, loading } = useAuth() 
   if (loading) return <div style={{ color:'#a78bfa', padding:40, fontFamily:'monospace' }}>Cargando...</div>
   if (!user) return <Navigate to="/login" />
   if (!role) return <Navigate to="/rol" />
