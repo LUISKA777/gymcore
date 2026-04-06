@@ -9,8 +9,8 @@ export default function Dashboard() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    API.get('/dashboard').then(r => setData(r.data)).finally(() => setLoading(false))
-    const interval = setInterval(() => API.get('/dashboard').then(r => setData(r.data)), 60000)
+    API.get('/dashboard/').then(r => setData(r.data)).finally(() => setLoading(false))
+    const interval = setInterval(() => API.get('/dashboard/').then(r => setData(r.data)), 60000)
     return () => clearInterval(interval)
   }, [])
 

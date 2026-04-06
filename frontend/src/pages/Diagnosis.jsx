@@ -3,11 +3,11 @@ import Sidebar from './Sidebar'
 import API from '../api'
 
 const FRASES = [
-  "Tu esfuerzo vale la pena!",
-  "Cada dia es una nueva oportunidad!",
-  "Los campeones nunca se rinden!",
-  "Tu cuerpo puede, tu mente decide!",
-  "Segui adelante, lo estas logrando!",
+  "¡Tu esfuerzo vale la pena! 💪",
+  "¡Cada día es una nueva oportunidad! 🌟",
+  "¡Los campeones nunca se rinden! 🏆",
+  "¡Tu cuerpo puede, tu mente decide! ⚡",
+  "¡Seguí adelante, lo estás logrando! 🔥",
 ]
 
 export default function Diagnosis() {
@@ -16,7 +16,7 @@ export default function Diagnosis() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    Promise.all([API.get('/dashboard'), API.get('/gyms/me')])
+    Promise.all([API.get('/dashboard/'), API.get('/gyms/me')])
       .then(([d, g]) => { setData(d.data); setGym(g.data) })
       .finally(() => setLoading(false))
   }, [])
@@ -29,26 +29,26 @@ export default function Diagnosis() {
 
     let msg = ''
     if (type === 'overdue') {
-  msg = `Hola ${client.name}!
+      msg = `¡Hola ${client.name}! 👋
 
-Notamos que tu membresia en *${gymName}* vencio. Te extranamos!
-
-${frase}
-
-Renovala hoy y volvé a entrenar con nosotros. Contactanos para coordinar tu pago.
-
-- Equipo ${gymName}`
-} else {
-  msg = `Hola ${client.name}!
-
-Te escribimos desde *${gymName}* para recordarte que tu membresia vence pronto.
+Notamos que tu membresía en *${gymName}* venció. ¡Te extrañamos! 😢
 
 ${frase}
 
-Renovala ahora y segui alcanzando tus metas sin interrupciones! Contactanos para coordinar tu pago.
+Renová hoy y volvé a entrenar con nosotros. 💪 Contáctanos para coordinar tu pago.
 
-${gymName} te apoya en cada paso de tu camino fitness!`
-}
+— Equipo ${gymName} 🏋️`
+    } else {
+      msg = `¡Hola ${client.name}! 👋
+
+Te escribimos desde *${gymName}* para recordarte que tu membresía vence pronto. 📅
+
+${frase}
+
+¡Renovála ahora y seguí alcanzando tus metas sin interrupciones! 🔥
+
+— Equipo ${gymName} 🏋️`
+    }
 
     window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank')
   }

@@ -18,9 +18,9 @@ export default function Sales() {
 
   useEffect(() => {
     Promise.all([
-      API.get('/products'),
+      API.get('/products/'),
       API.get('/sales/summary'),
-      API.get('/sales'),
+      API.get('/sales/'),
     ]).then(([p, s, r]) => {
       setProducts(p.data)
       setSummary(s.data)
@@ -53,7 +53,7 @@ export default function Sales() {
     if (!cart.length) return
     setProcessing(true)
     try {
-      const res = await API.post('/sales', {
+      const res = await API.post('/sales/', {
         items: cart.map(i => ({ product_id: i.product_id, name: i.name, qty: i.qty, price: i.price })),
         total,
         payment_method: payment,
@@ -63,7 +63,7 @@ export default function Sales() {
       setReceipt({ ...res.data, items: cart, payment, sinpeRef })
       setCart([])
       setSinpeRef('')
-      const [s, r, p] = await Promise.all([API.get('/sales/summary'), API.get('/sales'), API.get('/products')])
+      const [s, r, p] = await Promise.all([API.get('/sales/summary'), API.get('/sales/'), API.get('/products/')])
       setSummary(s.data)
       setRecentSales(r.data.slice(0, 20))
       setProducts(p.data)
@@ -136,6 +136,7 @@ export default function Sales() {
                         </div>
                       </div>
                     ))}
+                    {!products.filter(p => p.stock > 0).length && <p style={{ color:'#64748b', fontSize:13 }}>Sin productos con stock</p>}
                   </div>
                 </div>
               </div>

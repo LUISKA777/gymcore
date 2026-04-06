@@ -44,7 +44,7 @@ export default function Inventory() {
     setSaving(true)
     try {
       if (editProduct) {
-        const res = await API.patch(`/products/${editProduct.id}`, form)
+        const res = await API.patch(`/products/${editProduct.id}/`, form)
         setProducts(prev => prev.map(p => p.id === editProduct.id ? res.data : p))
       } else {
         const res = await API.post('/products/', form)
@@ -57,7 +57,7 @@ export default function Inventory() {
 
   const del = async (id) => {
     if (!confirm('Eliminar este producto?')) return
-    await API.delete(`/products/${id}`)
+    await API.delete(`/products/${id}/`)
     setProducts(prev => prev.filter(p => p.id !== id))
   }
 
