@@ -43,8 +43,14 @@ export default function Clients() {
     if (!form.name) return setError('El nombre es obligatorio')
     setSaving(true)
     try {
-      const res = await API.post('/clients', form)
-      setClients(prev => [...prev, res.data])
+      const { matricula_plan_id, ...clientData } = form
+      const res = await API.post('/clients', clientData)
+      const newClient = res.data
+      if (matricula_plan_id) {
+        const plan = plans.find(p => p.id === matricula_plan_id)
+        if (plan) await API.post('/payments/', { client_id: newClient.id, plan_id: matricula_plan_id, amount: plan.price })
+      }
+      setClients(prev => [...prev, newClient])
       setModal(false); setForm({}); setError('')
     } catch (e) { setError(e.response?.data?.detail || 'Error al guardar') }
     setSaving(false)
@@ -182,7 +188,14 @@ export default function Clients() {
               <label className="label">Plan de membresía</label>
               <select className="input" value={form.membership_plan_id || ''} onChange={e => setForm({...form, membership_plan_id: parseInt(e.target.value)})}>
                 <option value="">Sin plan</option>
-                {plans.map(p => <option key={p.id} value={p.id}>{p.name} — ₡{p.price.toLocaleString()}</option>)}
+                {plans.filter(p => p.type !== 'matricula').map(p => <option key={p.id} value={p.id}>{p.name} — ₡{p.price.toLocaleString()}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="label">Matricula</label>
+              <select className="input" value={form.matricula_plan_id || ''} onChange={e => setForm({...form, matricula_plan_id: parseInt(e.target.value)})}>
+                <option value="">Sin matricula</option>
+                {plans.filter(p => p.type === 'matricula').map(p => <option key={p.id} value={p.id}>{p.name} — ₡{p.price.toLocaleString()}</option>)}
               </select>
             </div>
             <div>
