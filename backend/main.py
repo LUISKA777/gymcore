@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
-from routers import auth, gyms, clients, measurements, payments, expenses, dashboard
+from routers import auth, gyms, clients, measurements, payments, expenses, dashboard, products, sales
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -12,9 +12,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="GymCore API",
-    description="Sistema de gestión para gyms",
+    description="Sistema de gestion para gyms",
     version="1.0.0",
     lifespan=lifespan,
+    redirect_slashes=False,
 )
 
 app.add_middleware(
@@ -32,6 +33,8 @@ app.include_router(measurements.router, prefix="/api/measurements", tags=["Measu
 app.include_router(payments.router,     prefix="/api/payments",     tags=["Payments"])
 app.include_router(expenses.router,     prefix="/api/expenses",     tags=["Expenses"])
 app.include_router(dashboard.router,    prefix="/api/dashboard",    tags=["Dashboard"])
+app.include_router(products.router,     prefix="/api/products",     tags=["Products"])
+app.include_router(sales.router,        prefix="/api/sales",        tags=["Sales"])
 
 @app.get("/")
 def root():

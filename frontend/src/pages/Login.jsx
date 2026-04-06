@@ -22,7 +22,7 @@ export default function Login() {
     try {
       const res = await API.post('/auth/login', { email, password })
       login({ name: res.data.name, email: res.data.email, role: res.data.role, gym_id: res.data.gym_id }, res.data.token)
-      navigate(res.data.role === 'admin' ? '/super-admin' : '/')
+      navigate(res.data.role === 'admin' ? '/super-admin' : '/rol')
     } catch (e) { setError(e.response?.data?.detail || 'Credenciales incorrectas') }
     setLoading(false)
   }
