@@ -33,7 +33,7 @@ export default function Inventory() {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    API.get('/products').then(r => setProducts(r.data)).finally(() => setLoading(false))
+    API.get('/products/').then(r => setProducts(r.data)).finally(() => setLoading(false))
   }, [])
 
   const openAdd = () => { setForm({ category: 'General', stock: 0, buy_price: 0 }); setEditProduct(null); setError(''); setModal(true) }
@@ -47,7 +47,7 @@ export default function Inventory() {
         const res = await API.patch(`/products/${editProduct.id}`, form)
         setProducts(prev => prev.map(p => p.id === editProduct.id ? res.data : p))
       } else {
-        const res = await API.post('/products', form)
+        const res = await API.post('/products/', form)
         setProducts(prev => [...prev, res.data])
       }
       setModal(false); setForm({})
