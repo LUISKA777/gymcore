@@ -29,7 +29,7 @@ export default function ClientDetail() {
 
   useEffect(() => {
     Promise.all([
-      API.get(`/clients/${id}/`),
+      API.get(`/clients/${id}`),
       API.get(`/measurements/progress/${id}`),
       API.get('/dashboard/plans'),
     ]).then(([c, p, pl]) => {
@@ -56,7 +56,7 @@ export default function ClientDetail() {
     try {
       const plan = plans.find(p => p.id === parseInt(payForm.plan_id))
       await API.post('/payments/', { client_id: parseInt(id), plan_id: parseInt(payForm.plan_id), amount: plan?.price || 0 })
-      const c = await API.get(`/clients/${id}/`)
+      const c = await API.get(`/clients/${id}`)
       setClient(c.data)
       setShowPayForm(false); setPayForm({})
     } catch {}
@@ -66,7 +66,7 @@ export default function ClientDetail() {
   const deleteClient = async () => {
     if (!confirm(`¿Eliminar a ${client.name}? Esta acción no se puede deshacer.`)) return
     try {
-      await API.delete(`/clients/${id}/`)
+      await API.delete(`/clients/${id}`)
       navigate('/clientes')
     } catch {}
   }
