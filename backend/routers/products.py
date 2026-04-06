@@ -47,5 +47,5 @@ def update_product(product_id: int, body: ProductUpdate, db: Client = Depends(ge
 
 @router.delete("/{product_id}")
 def delete_product(product_id: int, db: Client = Depends(get_db), user=Depends(require_gym)):
-    db.table("products").update({"active": False}).eq("id", product_id).eq("gym_id", user["gym_id"]).execute()
+    db.table("products").delete().eq("id", product_id).eq("gym_id", user["gym_id"]).execute()
     return {"message": "Producto eliminado"}

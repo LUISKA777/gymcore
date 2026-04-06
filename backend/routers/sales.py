@@ -40,7 +40,7 @@ def create_sale(body: SaleCreate, db: Client = Depends(get_db), user=Depends(req
         product = db.table("products").select("stock").eq("id", item.product_id).single().execute().data
         new_stock = product["stock"] - item.qty
         if new_stock <= 0:
-            db.table("products").update({"active": False, "stock": 0}).eq("id", item.product_id).execute()
+            db.table("products").delete().eq("id", item.product_id).execute()
         else:
             db.table("products").update({"stock": new_stock}).eq("id", item.product_id).execute()
 
