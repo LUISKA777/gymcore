@@ -85,7 +85,7 @@ export default function SuperAdmin() {
         <div style={{ display:'flex', alignItems:'center', gap:12 }}>
           <div style={{ width:36, height:36, background:'linear-gradient(135deg,#8b5cf6,#6366f1)', borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18 }}>G</div>
           <div>
-            <div style={{ fontSize:16, fontWeight:600, color:'#f1f5f9' }}>GymWep</div>
+            <div style={{ fontSize:16, fontWeight:600, color:'#f1f5f9' }}>GymCore</div>
             <div style={{ fontSize:11, color:'#64748b', fontFamily:'DM Mono,monospace', letterSpacing:1 }}>SUPER ADMIN</div>
           </div>
         </div>

@@ -58,7 +58,7 @@ export default function App() {
           <Route path="/diagnostico" element={<PrivateRoute><Diagnosis /></PrivateRoute>} />
           <Route path="/reportes" element={<PrivateRoute ownerOnly><Reports /></PrivateRoute>} />
           <Route path="/perfil-gym" element={<PrivateRoute ownerOnly><GymProfile /></PrivateRoute>} />
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

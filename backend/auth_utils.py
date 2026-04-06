@@ -5,7 +5,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import bcrypt as _bcrypt
 import os
 
-SECRET_KEY  = os.getenv("JWT_SECRET", "GymWep-secret-2024")
+SECRET_KEY  = os.getenv("JWT_SECRET", "GymCore-secret-2024")
 ALGORITHM   = "HS256"
 TOKEN_HOURS = 12
 

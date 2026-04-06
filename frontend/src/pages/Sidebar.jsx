@@ -64,7 +64,7 @@ export default function Sidebar() {
       <div className="sidebar">
         <div className="sidebar-logo" style={{ display:'flex', alignItems:'center', gap:10 }}>
           {gym?.logo_url && <img src={gym.logo_url} alt="logo" style={{ width:32, height:32, borderRadius:8, objectFit:'cover' }} />}
-          <span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{gym?.name || 'GymWep'}</span>
+          <span style={{ overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{gym?.name || 'GymCore'}</span>
         </div>
 
         {isEmployee && (

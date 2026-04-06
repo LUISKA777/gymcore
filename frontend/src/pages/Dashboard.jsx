@@ -114,7 +114,7 @@ export default function Dashboard() {
           </div>
           <div>
             <div style={{ fontSize:13, color:'rgba(var(--gym-primary-rgb),1)', fontFamily:'DM Mono,monospace', letterSpacing:2, marginBottom:6, textTransform:'uppercase' }}>Panel de control</div>
-            <div style={{ fontSize:26, fontWeight:700, color:'#f1f5f9', marginBottom:4 }}>{gym?.name || 'GymWep'}</div>
+            <div style={{ fontSize:26, fontWeight:700, color:'#f1f5f9', marginBottom:4 }}>{gym?.name || 'GymCore'}</div>
             <div style={{ fontSize:13, color:'#64748b' }}>
               {d.active_clients || 0} clientes activos · {d.overdue_clients || 0} morosos · retencion {retentionRate}%
             </div>

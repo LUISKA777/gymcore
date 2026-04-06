@@ -31,7 +31,7 @@ export default function Landing() {
 
       {/* Nav */}
       <div style={{ padding:'16px 32px', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid rgba(255,255,255,0.06)', position:'sticky', top:0, background:'rgba(8,8,8,0.95)', backdropFilter:'blur(10px)', zIndex:100 }}>
-        <div style={{ fontSize:20, fontWeight:700, color }}>GymWep</div>
+        <div style={{ fontSize:20, fontWeight:700, color }}>GymCore</div>
         <button onClick={() => navigate('/login')}
           style={{ background: color, color:'#fff', border:'none', borderRadius:8, padding:'9px 20px', cursor:'pointer', fontSize:13, fontWeight:500 }}>
           Iniciar sesión
@@ -46,7 +46,7 @@ export default function Landing() {
           Administrá tu gym<br/><span style={{ color }}>sin complicaciones</span>
         </h1>
         <p style={{ fontSize:17, color:'#94a3b8', lineHeight:1.7, marginBottom:36 }}>
-          <GymWep></GymWep> es el sistema todo en uno para gyms. Controlá clientes, cobros, inventario y finanzas desde cualquier dispositivo. Enfocate en entrenar — nosotros nos encargamos del resto.
+          <GymCore></GymCore> es el sistema todo en uno para gyms. Controlá clientes, cobros, inventario y finanzas desde cualquier dispositivo. Enfocate en entrenar — nosotros nos encargamos del resto.
         </p>
         <button onClick={() => navigate('/login')}
           style={{ background: color, color:'#fff', border:'none', borderRadius:10, padding:'14px 32px', cursor:'pointer', fontSize:15, fontWeight:600, marginRight:12 }}>
@@ -113,7 +113,7 @@ export default function Landing() {
       </div>
 
       <div style={{ padding:'20px 32px', textAlign:'center', fontSize:11, color:'#334155', borderTop:'1px solid rgba(255,255,255,0.04)' }}>
-        GymWep — Sistema de gestión para gyms
+        GymCore — Sistema de gestión para gyms
       </div>
     </div>
   )
