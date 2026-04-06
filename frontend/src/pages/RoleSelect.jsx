@@ -21,7 +21,7 @@ export default function RoleSelect() {
     setLoading(true)
     try {
       const res = await API.get('/gyms/me')
-      if (res.data.owner_pin === pin) {
+      if (String(res.data.owner_pin).trim() === String(pin).trim()) {
         setRole('owner')
         navigate('/dashboard')
       } else {
