@@ -75,5 +75,5 @@ def update_client(client_id: int, body: ClientUpdate, db: Client = Depends(get_d
 
 @router.delete("/{client_id}")
 def delete_client(client_id: int, db: Client = Depends(get_db), user=Depends(require_gym)):
-    db.table("clients").update({"active": False}).eq("id", client_id).execute()
-    return {"message": "Cliente desactivado"}
+    db.table("clients").delete().eq("id", client_id).eq("gym_id", user["gym_id"]).execute()
+    return {"message": "Cliente eliminado"}
