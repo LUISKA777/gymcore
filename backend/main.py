@@ -14,8 +14,7 @@ app = FastAPI(
     title="GymCore API",
     description="Sistema de gestion para gyms",
     version="1.0.0",
-    lifespan=lifespan,
-    redirect_slashes=False,
+    lifespan=lifespan
 )
 
 app.add_middleware(
