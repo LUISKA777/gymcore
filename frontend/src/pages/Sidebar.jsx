@@ -34,6 +34,7 @@ export default function Sidebar() {
     { path: '/inventario',   icon: '📦', label: 'Inventario' },
     { path: '/finanzas',     icon: '₡',  label: 'Finanzas' },
     { path: '/gastos',       icon: '−',  label: 'Gastos' },
+    { path: '/reportes',     icon: '📊', label: 'Reportes' },
     { path: '/diagnostico',  icon: '⚡', label: 'Diagnostico' },
     { path: '/perfil-gym',   icon: '🏋️', label: 'Mi Gym' },
   ]

@@ -11,7 +11,7 @@ import Diagnosis from './pages/Diagnosis'
 import GymProfile from './pages/GymProfile'
 import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
-import Sales from './pages/Sales'
+import Reports from './pages/Reports'
 
 function PrivateRoute({ children, ownerOnly }) {
   const { user, role, isOwner, loading } = useAuth()
@@ -54,6 +54,7 @@ export default function App() {
           <Route path="/finanzas" element={<PrivateRoute ownerOnly><Finances /></PrivateRoute>} />
           <Route path="/gastos" element={<PrivateRoute ownerOnly><Expenses /></PrivateRoute>} />
           <Route path="/diagnostico" element={<PrivateRoute><Diagnosis /></PrivateRoute>} />
+          <Route path="/reportes" element={<PrivateRoute ownerOnly><Reports /></PrivateRoute>} />
           <Route path="/perfil-gym" element={<PrivateRoute ownerOnly><GymProfile /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
