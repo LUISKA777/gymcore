@@ -29,7 +29,7 @@ export default function Sidebar() {
   }
 
   const ownerNav = [
-    { path: '/',             icon: '▦', label: 'Dashboard' },
+    { path: '/dashboard',   icon: '▦', label: 'Dashboard' },
     { path: '/clientes',     icon: '👤', label: 'Clientes' },
     { path: '/inventario',   icon: '📦', label: 'Inventario' },
     { path: '/finanzas',     icon: '₡',  label: 'Finanzas' },

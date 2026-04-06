@@ -13,7 +13,7 @@ export default function RoleSelect() {
 
   const enterAsEmployee = () => {
     setRole('employee')
-    navigate('/')
+    navigate('/clientes')
   }
 
   const verifyPin = async () => {
@@ -23,7 +23,7 @@ export default function RoleSelect() {
       const res = await API.get('/gyms/me')
       if (res.data.owner_pin === pin) {
         setRole('owner')
-        navigate('/')
+        navigate('/dashboard')
       } else {
         setError('PIN incorrecto')
       }

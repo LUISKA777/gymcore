@@ -12,7 +12,7 @@ import GymProfile from './pages/GymProfile'
 import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
-import Sales from './pages/Sales'
+import Landing from './pages/Landing'
 
 function PrivateRoute({ children, ownerOnly }) {
   const { user, role, isOwner, loading } = useAuth()
@@ -22,7 +22,6 @@ function PrivateRoute({ children, ownerOnly }) {
   if (ownerOnly && !isOwner) return <Navigate to="/clientes" />
   return children
 }
-
 function AdminRoute({ children }) {
   const { user, loading } = useAuth()
   if (loading) return null
@@ -44,10 +43,11 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/rol" element={<RoleRoute><RoleSelect /></RoleRoute>} />
           <Route path="/super-admin" element={<AdminRoute><SuperAdmin /></AdminRoute>} />
-          <Route path="/" element={<PrivateRoute ownerOnly><Dashboard /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute ownerOnly><Dashboard /></PrivateRoute>} />
           <Route path="/clientes" element={<PrivateRoute><Clients /></PrivateRoute>} />
           <Route path="/clientes/:id" element={<PrivateRoute><ClientDetail /></PrivateRoute>} />
           <Route path="/ventas" element={<PrivateRoute><Sales /></PrivateRoute>} />
