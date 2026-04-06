@@ -30,6 +30,10 @@ export default function SuperAdmin() {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
 
+  const [pinModal, setPinModal] = useState(null)
+  const [newPin, setNewPin] = useState('')
+  const [savingPin, setSavingPin] = useState(false)
+
   useEffect(() => {
     if (user?.role !== 'admin') { navigate('/'); return }
     API.get('/gyms/').then(r => setGyms(r.data)).finally(() => setLoading(false))
@@ -37,9 +41,12 @@ export default function SuperAdmin() {
 
   const save = async () => {
     if (!form.name || !form.email || !form.password) return setError('Nombre, email y contraseña son obligatorios')
+    if (!form.owner_pin || form.owner_pin.length < 4) return setError('El PIN debe tener al menos 4 digitos')
     setSaving(true)
     try {
-      await API.post('/auth/register', form)
+      const res = await API.post('/auth/register', form)
+      // Save PIN separately
+      await API.patch(`/gyms/${res.data.id}`, { owner_pin: form.owner_pin })
       const r = await API.get('/gyms/')
       setGyms(r.data)
       setModal(false); setForm({}); setError('')
@@ -56,6 +63,16 @@ export default function SuperAdmin() {
     if (!confirm(`¿Eliminar ${gym.name} permanentemente? Esta acción no se puede deshacer.`)) return
     await API.delete(`/gyms/${gym.id}`)
     setGyms(prev => prev.filter(g => g.id !== gym.id))
+  }
+
+  const savePin = async () => {
+    if (!newPin || newPin.length < 4) return
+    setSavingPin(true)
+    try {
+      await API.patch(`/gyms/${pinModal.id}`, { owner_pin: newPin })
+      setPinModal(null); setNewPin('')
+    } catch {}
+    setSavingPin(false)
   }
 
   const filtered = gyms.filter(g => g.role !== 'admin' && g.name?.toLowerCase().includes(search.toLowerCase()))
@@ -148,6 +165,10 @@ export default function SuperAdmin() {
                       color: g.active ? '#f87171' : '#34d399' }}>
                     {g.active ? 'Restringir' : 'Activar'}
                   </button>
+                  <button onClick={() => { setPinModal(g); setNewPin('') }}
+                    style={{ padding:'8px 12px', borderRadius:8, border:'none', cursor:'pointer', fontSize:12, background:'rgba(139,92,246,0.1)', color:'#a78bfa' }}>
+                    PIN
+                  </button>
                   <button onClick={() => deleteGym(g)}
                     style={{ padding:'8px 12px', borderRadius:8, border:'none', cursor:'pointer', fontSize:12, background:'rgba(248,113,113,0.08)', color:'#f87171' }}>
                     Eliminar
@@ -183,12 +204,43 @@ export default function SuperAdmin() {
                 placeholder="8888-0000" value={form.phone || ''} onChange={e => setForm({...form, phone: e.target.value})} />
             </div>
             <div>
+              <label style={{ display:'block', fontSize:10, letterSpacing:2, color:'#64748b', textTransform:'uppercase', marginBottom:6, fontFamily:'DM Mono,monospace' }}>WhatsApp (sin 506)</label>
+              <input style={{ background:'#1a1a1a', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, color:'#f1f5f9', fontSize:13, padding:'10px 14px', width:'100%', outline:'none', boxSizing:'border-box' }}
+                placeholder="88880000" value={form.whatsapp_number || ''} onChange={e => setForm({...form, whatsapp_number: '506' + e.target.value.replace(/\D/g,'')})} />
+            </div>
+            <div>
               <label style={{ display:'block', fontSize:10, letterSpacing:2, color:'#64748b', textTransform:'uppercase', marginBottom:6, fontFamily:'DM Mono,monospace' }}>Contraseña inicial</label>
               <input type="password" style={{ background:'#1a1a1a', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, color:'#f1f5f9', fontSize:13, padding:'10px 14px', width:'100%', outline:'none', boxSizing:'border-box' }}
                 placeholder="Minimo 6 caracteres" value={form.password || ''} onChange={e => setForm({...form, password: e.target.value})} />
             </div>
+            <div>
+              <label style={{ display:'block', fontSize:10, letterSpacing:2, color:'#64748b', textTransform:'uppercase', marginBottom:6, fontFamily:'DM Mono,monospace' }}>PIN del dueño</label>
+              <input style={{ background:'#1a1a1a', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, color:'#f1f5f9', fontSize:13, padding:'10px 14px', width:'100%', outline:'none', boxSizing:'border-box' }}
+                placeholder="Minimo 4 digitos" maxLength={8} value={form.owner_pin || ''} onChange={e => setForm({...form, owner_pin: e.target.value})} />
+              <div style={{ fontSize:11, color:'#475569', marginTop:4 }}>El dueño lo puede cambiar despues desde Mi Gym</div>
+            </div>
           </div>
         </Modal>
+      )}
+
+      {pinModal && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.85)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding:16 }}>
+          <div style={{ background:'#111', border:'1px solid rgba(255,255,255,0.1)', borderRadius:16, padding:28, width:'100%', maxWidth:360 }}>
+            <h3 style={{ fontSize:18, fontWeight:600, color:'#f1f5f9', marginBottom:8 }}>Resetear PIN</h3>
+            <p style={{ color:'#64748b', fontSize:12, marginBottom:20 }}>{pinModal.name}</p>
+            <label style={{ display:'block', fontSize:10, letterSpacing:2, color:'#64748b', textTransform:'uppercase', marginBottom:6, fontFamily:'DM Mono,monospace' }}>Nuevo PIN</label>
+            <input style={{ background:'#1a1a1a', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, color:'#f1f5f9', fontSize:18, padding:'10px 14px', width:'100%', outline:'none', boxSizing:'border-box', textAlign:'center', letterSpacing:6, marginBottom:20 }}
+              placeholder="1234" maxLength={8} value={newPin} onChange={e => setNewPin(e.target.value)} />
+            <div style={{ display:'flex', gap:12 }}>
+              <button onClick={() => { setPinModal(null); setNewPin('') }}
+                style={{ flex:1, padding:'10px', background:'transparent', color:'#64748b', border:'1px solid rgba(255,255,255,0.08)', borderRadius:8, cursor:'pointer', fontSize:13 }}>Cancelar</button>
+              <button onClick={savePin} disabled={savingPin}
+                style={{ flex:2, padding:'10px', background:'#8b5cf6', color:'#fff', border:'none', borderRadius:8, cursor:'pointer', fontSize:13, fontWeight:500 }}>
+                {savingPin ? 'Guardando...' : 'Guardar PIN'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
