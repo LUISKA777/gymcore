@@ -1,4 +1,4 @@
-const BASE = 'https://gymcore-production.up.railway.app/api'
+const BASE = 'https://GymWep-production.up.railway.app/api'
 
 const API = {
   async request(method, path, data) {

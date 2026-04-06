@@ -35,7 +35,7 @@ export default function Login() {
       if (res.data.whatsapp_number && res.data.code) {
         const num = res.data.whatsapp_number
         const gymName = res.data.name
-        const msg = `GymCore - Codigo de verificacion\n\nHola ${gymName}!\n\nTu codigo para cambiar la contrasena es:\n\n*${res.data.code}*\n\nEste codigo es de uso unico. Si no solicitaste este cambio, ignoralo.`
+        const msg = `GymWep - Codigo de verificacion\n\nHola ${gymName}!\n\nTu codigo para cambiar la contrasena es:\n\n*${res.data.code}*\n\nEste codigo es de uso unico. Si no solicitaste este cambio, ignoralo.`
         window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank')
         setMsg('Se abrio WhatsApp con tu codigo. Ingresalo abajo.')
         setMode('reset')
@@ -67,7 +67,7 @@ export default function Login() {
   return (
     <div style={{ minHeight:'100vh', background:'#080808', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px 16px' }}>
       <div style={{ marginBottom:32, textAlign:'center' }}>
-        <div style={{ fontSize:28, fontWeight:700, color:'#a78bfa', letterSpacing:2 }}>GymCore</div>
+        <div style={{ fontSize:28, fontWeight:700, color:'#a78bfa', letterSpacing:2 }}>GymWep</div>
         <div style={{ color:'#64748b', fontSize:13, marginTop:4 }}>Sistema de gestion para gyms</div>
       </div>
 

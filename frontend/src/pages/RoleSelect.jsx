@@ -36,7 +36,7 @@ export default function RoleSelect() {
   return (
     <div style={{ minHeight:'100vh', background:'#080808', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px 16px' }}>
       <div style={{ marginBottom:32, textAlign:'center' }}>
-        <div style={{ fontSize:28, fontWeight:700, color: primary, letterSpacing:2 }}>GymCore</div>
+        <div style={{ fontSize:28, fontWeight:700, color: primary, letterSpacing:2 }}>GymWep</div>
         <div style={{ color:'#64748b', fontSize:13, marginTop:4 }}>Bienvenido, {user?.name}</div>
       </div>
 

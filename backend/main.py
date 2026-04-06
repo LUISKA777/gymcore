@@ -6,12 +6,12 @@ from routers import auth, gyms, clients, measurements, payments, expenses, dashb
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("GymCore API iniciando...")
+    print("GymWep API iniciando...")
     yield
-    print("GymCore API cerrando...")
+    print("GymWep API cerrando...")
 
 app = FastAPI(
-    title="GymCore API",
+    title="GymWep API",
     description="Sistema de gestion para gyms",
     version="1.0.0",
     lifespan=lifespan
@@ -37,7 +37,7 @@ app.include_router(sales.router,        prefix="/api/sales",        tags=["Sales
 
 @app.get("/")
 def root():
-    return {"status": "ok", "app": "GymCore API v1.0"}
+    return {"status": "ok", "app": "GymWep API v1.0"}
 
 @app.get("/health")
 def health():
