@@ -11,7 +11,7 @@ export default function Finances() {
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    Promise.all([API.get('/payments/'), API.get('/dashboard/plans')])
+    Promise.all([API.get('/payments'), API.get('/dashboard/plans')])
       .then(([p, pl]) => { setPayments(p.data); setPlans(pl.data) })
       .finally(() => setLoading(false))
   }, [])
@@ -25,6 +25,14 @@ export default function Finances() {
       setShowPlanModal(false); setPlanForm({})
     } catch {}
     setSaving(false)
+  }
+
+  const deletePlan = async (id) => {
+    if (!confirm('Eliminar este plan?')) return
+    try {
+      await API.patch(`/dashboard/plans/${id}`, { active: false })
+      setPlans(prev => prev.filter(p => p.id !== id))
+    } catch {}
   }
 
   const totalIncome = payments.reduce((s, p) => s + p.amount, 0)
@@ -60,7 +68,10 @@ export default function Finances() {
                   <div style={{ fontSize:13, fontWeight:500 }}>{p.name}</div>
                   <div style={{ fontSize:11, color:'#64748b' }}>{p.duration_days} días</div>
                 </div>
-                <div style={{ fontSize:15, fontWeight:600, color:'#34d399' }}>₡{p.price.toLocaleString()}</div>
+                <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                  <div style={{ fontSize:15, fontWeight:600, color:'#34d399' }}>₡{p.price.toLocaleString()}</div>
+                  <button className="btn btn-red" style={{ fontSize:11, padding:'4px 8px' }} onClick={() => deletePlan(p.id)}>✕</button>
+                </div>
               </div>
             ))}
             {!plans.length && <p style={{ color:'#64748b', fontSize:13 }}>Sin planes. Agregá uno.</p>}

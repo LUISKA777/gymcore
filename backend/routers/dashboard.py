@@ -76,18 +76,17 @@ def get_dashboard(db: Client = Depends(get_db), user=Depends(require_gym)):
         }
     }
 
+@router.get("/plans")
+def list_plans(db: Client = Depends(get_db), user=Depends(require_gym)):
+    return db.table("membership_plans").select("*").eq("gym_id", user["gym_id"]).eq("active", True).execute().data
 
+@router.post("/plans")
 def create_plan(body: dict, db: Client = Depends(get_db), user=Depends(require_gym)):
     body["gym_id"] = user["gym_id"]
     res = db.table("membership_plans").insert(body).execute()
     return res.data[0]
 
-@router.get("/plans")
-def list_plans(db: Client = Depends(get_db), user=Depends(require_gym)):
-    return db.table("membership_plans").select("*").eq("active", True).execute().data
-
-@router.post("/plans")
-def create_plan(body: dict, db: Client = Depends(get_db), user=Depends(require_gym)):
-    body["gym_id"] = int(user["gym_id"])
-    res = db.table("membership_plans").insert(body).execute()
+@router.patch("/plans/{plan_id}")
+def update_plan(plan_id: int, body: dict, db: Client = Depends(get_db), user=Depends(require_gym)):
+    res = db.table("membership_plans").update(body).eq("id", plan_id).eq("gym_id", user["gym_id"]).execute()
     return res.data[0]
