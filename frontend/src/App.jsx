@@ -1,5 +1,3 @@
-import Sales from './pages/Sales'
-import Landing from './pages/Landing'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './AuthContext'
 import Login from './pages/Login'
@@ -14,11 +12,10 @@ import GymProfile from './pages/GymProfile'
 import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
-
-
+import Landing from './pages/Landing'
 
 function PrivateRoute({ children, ownerOnly }) {
-  const { user, role, isOwner, loading } = useAuth() 
+  const { user, role, isOwner, loading } = useAuth()
   if (loading) return <div style={{ color:'#a78bfa', padding:40, fontFamily:'monospace' }}>Cargando...</div>
   if (!user) return <Navigate to="/login" />
   if (!role) return <Navigate to="/rol" />
@@ -34,10 +31,10 @@ function AdminRoute({ children }) {
 }
 
 function RoleRoute({ children }) {
-  const { user, role, loading } = useAuth()
+  const { user, role, isOwner, loading } = useAuth()
   if (loading) return null
   if (!user) return <Navigate to="/login" />
-  if (role) return <Navigate to="/" />
+  if (role) return <Navigate to={isOwner ? "/dashboard" : "/clientes"} />
   return children
 }
 
