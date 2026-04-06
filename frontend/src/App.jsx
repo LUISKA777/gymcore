@@ -12,6 +12,7 @@ import GymProfile from './pages/GymProfile'
 import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
+import Sales from './pages/Sales'
 
 function PrivateRoute({ children, ownerOnly }) {
   const { user, role, isOwner, loading } = useAuth()
