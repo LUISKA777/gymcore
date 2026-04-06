@@ -13,6 +13,8 @@ import SuperAdmin from './pages/SuperAdmin'
 import Inventory from './pages/Inventory'
 import Reports from './pages/Reports'
 import Landing from './pages/Landing'
+import Sales from './pages/Sales'
+import Landing from './pages/Landing'
 
 function PrivateRoute({ children, ownerOnly }) {
   const { user, role, isOwner, loading } = useAuth()
