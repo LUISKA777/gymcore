@@ -31,7 +31,6 @@ export default function Sidebar() {
   const ownerNav = [
     { path: '/',             icon: '▦', label: 'Dashboard' },
     { path: '/clientes',     icon: '👤', label: 'Clientes' },
-    { path: '/ventas',       icon: '🛒', label: 'Ventas' },
     { path: '/inventario',   icon: '📦', label: 'Inventario' },
     { path: '/finanzas',     icon: '₡',  label: 'Finanzas' },
     { path: '/gastos',       icon: '−',  label: 'Gastos' },

@@ -34,7 +34,7 @@ export default function Clients() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    Promise.all([API.get('/clients/'), API.get('/dashboard/plans')])
+    Promise.all([API.get('/clients'), API.get('/dashboard/plans')])
       .then(([c, p]) => { setClients(c.data); setPlans(p.data) })
       .finally(() => setLoading(false))
   }, [])
@@ -43,11 +43,19 @@ export default function Clients() {
     if (!form.name) return setError('El nombre es obligatorio')
     setSaving(true)
     try {
-      const res = await API.post('/clients/', form)
+      const res = await API.post('/clients', form)
       setClients(prev => [...prev, res.data])
       setModal(false); setForm({}); setError('')
     } catch (e) { setError(e.response?.data?.detail || 'Error al guardar') }
     setSaving(false)
+  }
+
+  const deleteClient = async (id, name) => {
+    if (!confirm(`Eliminar a ${name}? Esta accion no se puede deshacer.`)) return
+    try {
+      await API.delete(`/clients/${id}`)
+      setClients(prev => prev.filter(c => c.id !== id))
+    } catch {}
   }
 
   const today = new Date().toISOString().split('T')[0]
@@ -60,14 +68,12 @@ export default function Clients() {
   })
 
   const statusOf = (c) => {
-  if (!c.membership_end) return { label:'Sin membresía', cls:'pill-blue' }
-  if (c.membership_end < today) return { label:'Vencida', cls:'pill-red' }
-  const diff = Math.ceil((new Date(c.membership_end) - new Date()) / 86400000)
-  if (diff === 0) return { label:'Vence hoy', cls:'pill-red' }
-  if (diff === 1) return { label:'Vence mañana', cls:'pill-amber' }
-  if (diff <= 7) return { label:`Vence en ${diff}d`, cls:'pill-amber' }
-  return { label:'Activa', cls:'pill-green' }
-}
+    if (!c.membership_end) return { label:'Sin membresía', cls:'pill-blue' }
+    if (c.membership_end < today) return { label:'Vencida', cls:'pill-red' }
+    const diff = Math.ceil((new Date(c.membership_end) - new Date()) / 86400000)
+    if (diff <= 3) return { label:`Vence en ${diff}d`, cls:'pill-amber' }
+    return { label:'Activa', cls:'pill-green' }
+  }
 
   return (
     <div className="layout">
@@ -117,8 +123,12 @@ export default function Clients() {
                       <td style={{ fontFamily:'DM Mono,monospace', fontSize:12 }}>{c.membership_end || '—'}</td>
                       <td><span className={`pill ${st.cls}`}>{st.label}</span></td>
                       <td>
-                        <button className="btn btn-ghost" style={{ fontSize:11, padding:'4px 10px' }}
-                          onClick={() => navigate(`/clientes/${c.id}`)}>Ver</button>
+                        <div style={{ display:'flex', gap:6 }}>
+                          <button className="btn btn-ghost" style={{ fontSize:11, padding:'4px 10px' }}
+                            onClick={() => navigate(`/clientes/${c.id}`)}>Ver</button>
+                          <button className="btn btn-red" style={{ fontSize:11, padding:'4px 8px' }}
+                            onClick={() => deleteClient(c.id, c.name)}>✕</button>
+                        </div>
                       </td>
                     </tr>
                   )
