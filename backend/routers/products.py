@@ -14,6 +14,8 @@ class ProductCreate(BaseModel):
     sell_price: int
     stock: int = 0
     category: Optional[str] = 'General'
+    alert_enabled: bool = False
+    alert_threshold: int = 5
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
@@ -23,6 +25,8 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = None
     category: Optional[str] = None
     active: Optional[bool] = None
+    alert_enabled: Optional[bool] = None
+    alert_threshold: Optional[int] = None
 
 @router.get("/")
 def list_products(db: Client = Depends(get_db), user=Depends(require_gym)):

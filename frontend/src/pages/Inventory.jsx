@@ -158,6 +158,27 @@ export default function Inventory() {
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
+            <div style={{ gridColumn:'1/-1', background:'#0a0a0a', borderRadius:10, padding:14 }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: form.alert_enabled ? 12 : 0 }}>
+                <div>
+                  <div style={{ fontSize:13, fontWeight:500, color:'#f1f5f9' }}>Alerta de stock bajo</div>
+                  <div style={{ fontSize:11, color:'#64748b' }}>Notificar en diagnostico cuando el stock baje</div>
+                </div>
+                <div onClick={() => setForm({...form, alert_enabled: !form.alert_enabled})}
+                  style={{ width:44, height:24, borderRadius:12, background: form.alert_enabled ? 'var(--gym-primary)' : '#2a2a2a', cursor:'pointer', position:'relative', transition:'background 0.2s', flexShrink:0 }}>
+                  <div style={{ width:18, height:18, borderRadius:'50%', background:'#fff', position:'absolute', top:3, left: form.alert_enabled ? 23 : 3, transition:'left 0.2s' }} />
+                </div>
+              </div>
+              {form.alert_enabled && (
+                <div>
+                  <label className="label">Avisar cuando el stock llegue a</label>
+                  <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                    <input className="input" type="number" min="1" placeholder="5" value={form.alert_threshold || ''} onChange={e => setForm({...form, alert_threshold: parseInt(e.target.value)})} style={{ maxWidth:100 }} />
+                    <span style={{ fontSize:13, color:'#64748b' }}>unidades o menos</span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </Modal>
       )}

@@ -181,21 +181,20 @@ ${frase}
           </div>
 
           {(() => {
-            const threshold = gym?.stock_alert_threshold || 5
-            const lowStock = products.filter(p => p.stock <= threshold)
+            const lowStock = products.filter(p => p.alert_enabled && p.stock <= (p.alert_threshold || 5))
             if (!lowStock.length) return null
             return (
               <div className="section" style={{ gridColumn:'1/-1' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
                   <div className="section-title" style={{ marginBottom:0, color:'#fbbf24' }}>Alerta de stock bajo</div>
-                  <span style={{ fontSize:11, color:'#64748b', fontFamily:'DM Mono,monospace' }}>Umbral: {threshold} unidades</span>
+                  <span style={{ fontSize:11, color:'#64748b' }}>{lowStock.length} producto(s)</span>
                 </div>
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))', gap:10 }}>
                   {lowStock.map(p => (
                     <div key={p.id} style={{ background:'rgba(251,191,36,0.05)', border:'1px solid rgba(251,191,36,0.2)', borderRadius:10, padding:12 }}>
                       <div style={{ fontSize:13, fontWeight:500, marginBottom:4 }}>{p.name}</div>
                       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                        <span style={{ fontSize:11, color:'#64748b' }}>{p.category}</span>
+                        <span style={{ fontSize:11, color:'#64748b' }}>Min: {p.alert_threshold || 5} unid.</span>
                         <span style={{ fontSize:14, fontWeight:700, color: p.stock === 0 ? '#f87171' : '#fbbf24' }}>
                           {p.stock === 0 ? 'Agotado' : `${p.stock} unid.`}
                         </span>
