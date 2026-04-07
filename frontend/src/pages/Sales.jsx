@@ -216,7 +216,10 @@ export default function Sales() {
                     <td style={{ fontFamily:'DM Mono,monospace', fontSize:11, color:'#64748b' }}>{new Date(s.created_at).toLocaleString('es-CR')}</td>
                     <td style={{ fontSize:12 }}>{s.items?.length} producto(s)</td>
                     <td style={{ fontWeight:600, color:'#34d399' }}>₡{s.total?.toLocaleString()}</td>
-                    <td><span className={`pill ${s.payment_method === 'sinpe' ? 'pill-blue' : 'pill-green'}`}>{s.payment_method}</span></td>
+                    <td>
+                        <span className={`pill ${s.payment_method === 'sinpe' ? 'pill-blue' : 'pill-green'}`}>{s.payment_method}</span>
+                         {s.sinpe_ref && <span style={{ fontSize:11, color:'#64748b', marginLeft:6 }}>#{s.sinpe_ref}</span>}
+                    </td>
                     <td style={{ color:'#64748b', fontSize:12 }}>{s.created_by || '—'}</td>
                   </tr>
                 ))}
