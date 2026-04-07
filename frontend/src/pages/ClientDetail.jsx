@@ -231,7 +231,7 @@ export default function ClientDetail() {
                 border: `1px solid ${r.type === 'success' ? 'rgba(52,211,153,0.2)' : r.type === 'warning' ? 'rgba(251,191,36,0.2)' : 'rgba(96,165,250,0.2)'}`,
                 borderRadius:8, padding:'10px 14px', marginBottom:8, display:'flex', gap:10, alignItems:'flex-start'
               }}>
-                <span style={{ fontSize:16, flexShrink:0 }}>{r.type === 'success' ? '✓' : r.type === 'warning' ? '⚠' : 'ℹ'}</span>
+                <span style={{ fontSize:16, flexShrink:0 }}>{r.type === 'success' ? 'OK' : r.type === 'warning' ? '!' : 'i'}</span>
                 <span style={{ fontSize:13, color: r.type === 'success' ? '#34d399' : r.type === 'warning' ? '#fbbf24' : '#60a5fa', lineHeight:1.5 }}>{r.msg}</span>
               </div>
             ))}
