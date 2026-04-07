@@ -68,7 +68,7 @@ export default function Landing() {
       <div style={{ padding:'0 32px 80px', maxWidth:1100, margin:'0 auto' }}>
         <div style={{ textAlign:'center', marginBottom:48 }}>
           <div style={{ fontSize:11, letterSpacing:3, color, fontFamily:'DM Mono,monospace', textTransform:'uppercase', marginBottom:12 }}>Funciones</div>
-          <h2 style={{ fontSize:32, fontWeight:700, color:'#f1f5f9' }}>Todo lo que tu gym necesita</h2>
+          <h2 style={{ fontSize:32, fontWeight:700, color:'#f1f5f9' }}>Todo lo que tu GYM necesita</h2>
         </div>
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap:16 }}>
           {features.map(f => (
