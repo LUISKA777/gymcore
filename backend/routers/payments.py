@@ -33,13 +33,13 @@ def create_payment(body: PaymentCreate, db: Client = Depends(get_db), user=Depen
     else:
         base_date = today
     
-    new_end = base_date + timedelta(days=plan["duration_days"])
-
-    db.table("clients").update({
-        "membership_plan_id": body.plan_id,
-        "membership_start":   str(today),
-        "membership_end":     str(new_end),
-    }).eq("id", body.client_id).execute()
+    if plan["duration_days"] > 0:
+        new_end = base_date + timedelta(days=plan["duration_days"])
+        db.table("clients").update({
+            "membership_plan_id": body.plan_id,
+            "membership_start":   str(today),
+            "membership_end":     str(new_end),
+        }).eq("id", body.client_id).execute()
 
     res = db.table("payments").insert({
         "client_id":   body.client_id,
