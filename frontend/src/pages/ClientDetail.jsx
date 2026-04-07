@@ -29,7 +29,7 @@ export default function ClientDetail() {
 
   useEffect(() => {
     Promise.all([
-      API.get(`/clients/${id}`),
+      API.get(`/clients/${id}/`),
       API.get(`/measurements/progress/${id}`),
       API.get('/dashboard/plans'),
     ]).then(([c, p, pl]) => {
@@ -39,12 +39,71 @@ export default function ClientDetail() {
     }).finally(() => setLoading(false))
   }, [id])
 
+  const [recommendations, setRecommendations] = useState(null)
+
+  const getRecommendations = (goal, measForm, progress) => {
+    const recs = []
+    const goal_lower = (goal || '').toLowerCase()
+    const isLoss = goal_lower.includes('perder') || goal_lower.includes('peso')
+    const isMuscle = goal_lower.includes('músculo') || goal_lower.includes('musculo') || goal_lower.includes('ganar')
+    const isPerformance = goal_lower.includes('rendimiento') || goal_lower.includes('deportivo')
+
+    if (isLoss) {
+      if (measForm.weight && progress?.progress?.weight) {
+        const diff = measForm.weight - progress.progress.weight.last
+        if (diff < 0) recs.push({ type:'success', msg:'Bajaste peso, vas por buen camino. Mantene la disciplina en la alimentacion.' })
+        else if (diff > 0) recs.push({ type:'warning', msg:'Subiste un poco de peso. Revisá la alimentacion y aumenta el cardio.' })
+        else recs.push({ type:'info', msg:'El peso se mantuvo. Seguí con el plan y sé consistente.' })
+      }
+      if (measForm.waist && progress?.progress?.waist) {
+        const diff = measForm.waist - progress.progress.waist.last
+        if (diff < 0) recs.push({ type:'success', msg:'La cintura bajó, señal de que estás perdiendo grasa abdominal.' })
+        else if (diff > 0) recs.push({ type:'warning', msg:'La cintura subió. Reducí harinas y azúcares.' })
+      }
+      if (measForm.body_fat && progress?.progress?.body_fat) {
+        const diff = measForm.body_fat - progress.progress.body_fat.last
+        if (diff < 0) recs.push({ type:'success', msg:'El porcentaje de grasa bajó. Excelente progreso.' })
+      }
+      recs.push({ type:'info', msg:'Recomendacion: 3-4 dias de cardio por semana + deficit calorico moderado.' })
+    }
+
+    if (isMuscle) {
+      if (measForm.weight && progress?.progress?.weight) {
+        const diff = measForm.weight - progress.progress.weight.last
+        if (diff > 0) recs.push({ type:'success', msg:'Subiste peso, buen progreso en masa. Asegurate que sea masa muscular.' })
+        else if (diff < 0) recs.push({ type:'warning', msg:'Bajaste peso. Aumenta las calorias y proteina en la dieta.' })
+      }
+      if (measForm.muscle_mass && progress?.progress?.muscle_mass) {
+        const diff = measForm.muscle_mass - progress.progress.muscle_mass.last
+        if (diff > 0) recs.push({ type:'success', msg:'La masa muscular aumentó. Seguí con el entrenamiento de fuerza.' })
+      }
+      if (measForm.bicep && progress?.progress?.bicep) {
+        const diff = measForm.bicep - progress.progress.bicep.last
+        if (diff > 0) recs.push({ type:'success', msg:'Los brazos crecieron. El trabajo de bíceps está dando resultados.' })
+      }
+      recs.push({ type:'info', msg:'Recomendacion: 1.6-2g de proteína por kg de peso corporal al día.' })
+    }
+
+    if (isPerformance) {
+      recs.push({ type:'info', msg:'Recomendacion: Enfocate en mejorar la técnica y aumentar progresivamente las cargas.' })
+      if (measForm.body_fat) recs.push({ type:'info', msg:'Mantene el porcentaje de grasa bajo para mejor rendimiento deportivo.' })
+    }
+
+    if (!isLoss && !isMuscle && !isPerformance) {
+      recs.push({ type:'info', msg:'Seguí con tu rutina actual. La consistencia es clave para ver resultados.' })
+    }
+
+    return recs
+  }
+
   const saveMeasurement = async () => {
     setSaving(true)
     try {
       await API.post('/measurements/', { ...measForm, client_id: parseInt(id) })
       const p = await API.get(`/measurements/progress/${id}`)
       setProgress(p.data)
+      const recs = getRecommendations(client.goal, measForm, p.data)
+      setRecommendations(recs)
       setShowMeasForm(false); setMeasForm({})
     } catch {}
     setSaving(false)
@@ -56,7 +115,7 @@ export default function ClientDetail() {
     try {
       const plan = plans.find(p => p.id === parseInt(payForm.plan_id))
       await API.post('/payments/', { client_id: parseInt(id), plan_id: parseInt(payForm.plan_id), amount: plan?.price || 0 })
-      const c = await API.get(`/clients/${id}`)
+      const c = await API.get(`/clients/${id}/`)
       setClient(c.data)
       setShowPayForm(false); setPayForm({})
     } catch {}
@@ -66,7 +125,7 @@ export default function ClientDetail() {
   const deleteClient = async () => {
     if (!confirm(`¿Eliminar a ${client.name}? Esta acción no se puede deshacer.`)) return
     try {
-      await API.delete(`/clients/${id}`)
+      await API.delete(`/clients/${id}/`)
       navigate('/clientes')
     } catch {}
   }
@@ -157,6 +216,27 @@ export default function ClientDetail() {
             )
           }
         </div>
+
+        </div>
+
+        {recommendations && recommendations.length > 0 && (
+          <div className="section" style={{ marginBottom:16 }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:16 }}>
+              <div className="section-title" style={{ marginBottom:0 }}>Recomendaciones del avance</div>
+              <button onClick={() => setRecommendations(null)} style={{ background:'none', border:'none', color:'#475569', cursor:'pointer', fontSize:18 }}>×</button>
+            </div>
+            {recommendations.map((r, i) => (
+              <div key={i} style={{
+                background: r.type === 'success' ? 'rgba(52,211,153,0.05)' : r.type === 'warning' ? 'rgba(251,191,36,0.05)' : 'rgba(96,165,250,0.05)',
+                border: `1px solid ${r.type === 'success' ? 'rgba(52,211,153,0.2)' : r.type === 'warning' ? 'rgba(251,191,36,0.2)' : 'rgba(96,165,250,0.2)'}`,
+                borderRadius:8, padding:'10px 14px', marginBottom:8, display:'flex', gap:10, alignItems:'flex-start'
+              }}>
+                <span style={{ fontSize:16, flexShrink:0 }}>{r.type === 'success' ? '✓' : r.type === 'warning' ? '⚠' : 'ℹ'}</span>
+                <span style={{ fontSize:13, color: r.type === 'success' ? '#34d399' : r.type === 'warning' ? '#fbbf24' : '#60a5fa', lineHeight:1.5 }}>{r.msg}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
         {showMeasForm && (
           <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.8)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, padding:16 }}>
