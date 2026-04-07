@@ -46,7 +46,7 @@ export default function Landing() {
           Administrá tu gym<br/><span style={{ color }}>sin complicaciones</span>
         </h1>
         <p style={{ fontSize:17, color:'#94a3b8', lineHeight:1.7, marginBottom:36 }}>
-          <GymCore></GymCore> es el sistema todo en uno para gyms. Controlá clientes, cobros, inventario y finanzas desde cualquier dispositivo. Enfocate en entrenar — nosotros nos encargamos del resto.
+        GymCore es el sistema todo en uno para gyms. Controlá clientes, cobros, inventario y finanzas desde cualquier dispositivo. Enfocate en entrenar — nosotros nos encargamos del resto.
         </p>
         <button onClick={() => navigate('/login')}
           style={{ background: color, color:'#fff', border:'none', borderRadius:10, padding:'14px 32px', cursor:'pointer', fontSize:15, fontWeight:600, marginRight:12 }}>
